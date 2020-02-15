@@ -1,6 +1,9 @@
 import styled, { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
+	* {
+		box-sizing: border-box;
+	}
 	body {
 		font-family: 'Open Sans', sans-serif;
 		background-color: #333333;
@@ -45,7 +48,10 @@ export const StyledCardList = styled.div`
 	max-width: 1400px;
 	margin: 0 auto;
 	padding: 0 10px;
-	margin-top: 4rem;
+	margin-top: 3rem;
+	@media only screen and (min-width: 600px) {
+		margin-top: 4rem;
+	}
 	display: grid;
 	grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
 	@media only screen and (min-width: 600px) {
@@ -68,7 +74,7 @@ export const StyledCardList = styled.div`
 	:before {
 		content: '';
 		width: 0;
-		padding-bottom: 75%;
+		padding-bottom: 85%;
 		grid-row: 1 / 1;
 		grid-column: 1 / 1;
 	}
@@ -102,10 +108,60 @@ export const StyledCard = styled.div`
 			animation: fadeIn .5s forwards ease-out;
 		}
 	}
+	&.disabled {
+		pointer-events: none;
+	}
 	@keyframes fadeIn {
 		0%   { opacity: 0; }
 		100% { opacity: 1; }
 	  }
 `;
+
+export const StyledStats = styled.div`
+	margin-top: 3rem;
+	@media only screen and (min-width: 600px) {
+		margin-top: 4rem;
+	}
+	margin-bottom: 2rem;
+	color: white;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	@media only screen and (min-width: 600px) {
+		flex-direction: row;
+		align-items: start;
+	}
+	& .duration {
+		margin-bottom: 2rem;
+		@media only screen and (min-width: 600px) {
+			margin-bottom: 0;
+			margin-right: 6rem;
+		}
+		& p {
+			margin: 0;
+		}
+	}
+	& .points {
+		display: flex;
+		justify-content: center;
+		& h4 {
+			border-bottom: 1px solid;
+			margin-top: 0;
+		}
+		& > div {
+			padding: 0 30px;
+			&:first-child {
+				color: #07c307;
+			}
+			&:last-child {
+				color: #ff1818;
+			}
+		}
+	}
+`;
+
+
 
 
