@@ -33,35 +33,35 @@ const GamePage = () => {
 	};
 	useEffect(() => {
 		if (cardsOpened.length === 2) {
-		const setIsPair = () => {
-			const card1 = cardsOpened[0];
-			const card2 = cardsOpened[1];
-			if (card1.pairID === card2.pairID && card1.cardID !== card2.cardID) {
-				setCards([
-					...cards.map((card) => {
-						if (card.id === card1.cardID || card.id === card2.cardID) card.pairFound = true;
-						return card;
-					})
-				]);
-			}	else {
-				const cardItem = document.querySelectorAll('.Card');
-				[...cardItem].forEach((item) => {
-					item.classList.add('disabled');
-				});
-				setTimeout(() => {
+			const setIsPair = () => {
+				const card1 = cardsOpened[0];
+				const card2 = cardsOpened[1];
+				if (card1.pairID === card2.pairID && card1.cardID !== card2.cardID) {
 					setCards([
 						...cards.map((card) => {
-							if (!card.pairFound) card.isOpen = false;
+							if (card.id === card1.cardID || card.id === card2.cardID) card.pairFound = true;
 							return card;
 						})
 					]);
+				}	else {
+					const cardItem = document.querySelectorAll('.Card');
 					[...cardItem].forEach((item) => {
-						item.classList.remove('disabled');
+						item.classList.add('disabled');
 					});
-				}, 1000);
-			}
-			setCardsOpened([]);
-		};
+					setTimeout(() => {
+						setCards([
+							...cards.map((card) => {
+								if (!card.pairFound) card.isOpen = false;
+								return card;
+							})
+						]);
+						[...cardItem].forEach((item) => {
+							item.classList.remove('disabled');
+						});
+					}, 1000);
+				}
+				setCardsOpened([]);
+			};
 		setIsPair();
 		}
 	}, [cards, cardsOpened]);
@@ -69,9 +69,7 @@ const GamePage = () => {
 		const setAreAllPairsFound = () => {
 			const allCards = cards;
 			if (allCards.length) {
-				const allPairsAreFound = allCards.every(item => {
-					return item.pairFound === true
-				});
+				const allPairsAreFound = allCards.every(item => item.pairFound === true);
 				setAllPairsFound(allPairsAreFound);
 			}
 		};
