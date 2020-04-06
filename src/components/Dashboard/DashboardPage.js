@@ -1,13 +1,20 @@
 import React from 'react';
 import { StyledDashboard, StyledButton } from '../../StyledComponents';
 import DashboardHeader from './DashboardHeader';
+import { socket, joinRandomRoom } from '../../api';
 
-const DashboardPage = () => {
+const DashboardPage = (props) => {
+	const findRandomGame = () => {
+		joinRandomRoom(socket.id);
+	};
 	return (
 		<StyledDashboard>
 			<DashboardHeader />
 			<div>
-				<StyledButton>Pelaa heti</StyledButton>
+				<StyledButton
+					onClick={findRandomGame}
+				>
+					Pelaa heti</StyledButton>
 				<StyledButton>Kutsu kaveri</StyledButton>
 			</div>
 		</StyledDashboard>

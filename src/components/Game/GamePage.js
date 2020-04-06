@@ -90,9 +90,12 @@ const GamePage = () => {
 		gameTimer = setTimeout(() => {
 			setGamePlayedDuration();
 		}, 1000);
+		return () => {
+			window.clearTimeout(gameTimer);
+		};
 	},[gameDuration])
 	useEffect(() => {
-		if (allPairsFound === true) window.clearTimeout(gameTimer);
+		allPairsFound && window.clearTimeout(gameTimer);
 	},[allPairsFound])
 	useEffect(() => {
 		setCards(shuffleCards(cardData));
