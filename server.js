@@ -9,26 +9,36 @@ app.get('/', function(req, res){
 });
 
 io.on('connection', socket => {
-	socket.emit('serverRooms', serverRooms);
 	socket.on('join random room', id => {
 		if (serverRooms.length) {
 			const firstNotFullRoom = serverRooms.filter(room => room.players.length < 2)[0];
 			if (firstNotFullRoom) {
-				if (firstNotFullRoom.room === id) return;
-				socket.join(firstNotFullRoom.room);
-				const matchingRoom = serverRooms.find(matchingRoom => matchingRoom && matchingRoom.room === firstNotFullRoom.room);
+				if (firstNotFullRoom.roomID === id) return;
+				socket.join(firstNotFullRoom.roomID);
+				const matchingRoom = serverRooms.find(matchingRoom => matchingRoom && matchingRoom.roomID === firstNotFullRoom.roomID);
 				matchingRoom && matchingRoom.players.push(id);
-				socket.to(matchingRoom.room).emit('lets play', matchingRoom);
+				socket.to(matchingRoom.roomID).emit('lets play', matchingRoom);
 			}	else {
 				if (serverRooms.some(room => room.players.includes(id))) return;
 				socket.join(id);
-				serverRooms.push({"room": id, "players": [id]});
+				serverRooms.push({"roomID": id, "players": [id]});
 			}
 		}	else {
 			socket.join(id);
-			serverRooms.push({"room": id, "players": [id]});
+			serverRooms.push({"roomID": id, "players": [id]});
 		}
 		socket.emit('joined room', serverRooms);
+	});
+
+	socket.on('cards for room', (roomID, cardData) => {
+		let room = serverRooms.find(room => room && room.roomID === roomID);
+		const cards = cardData;
+		serverRooms = serverRooms.map(serverRoom => {
+			if (serverRoom.roomID === room.roomID) {
+				serverRoom = { ...serverRoom, cards}
+			}
+			return serverRoom;
+		});
 	});
 
 	// TODO for playing with friend
@@ -49,8 +59,8 @@ io.on('connection', socket => {
 		leftRoom.players.forEach(player => {
 			socket.leave(player);
 		});
-		serverRooms = serverRooms.filter(room => room.room !== leftRoom.room);
-		socket.to(leftRoom.room).emit('player left room', serverRooms);
+		serverRooms = serverRooms.filter(room => room.roomID !== leftRoom.roomID);
+		socket.to(leftRoom.roomID).emit('player left room', serverRooms);
 	});
 });
 

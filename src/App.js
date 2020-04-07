@@ -1,34 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { socket } from '../src/api';
+import { socket, cardsForRoom } from '../src/api';
 import { GlobalStyles } from './StyledComponents';
 import DashboardPage from './components/Dashboard/DashboardPage';
 import GamePage from './components/Game/GamePage';
 
 const App = () => {
 	const [roomReady, setRoomReady] = useState(false);
+	const [roomID, setRoomID] = useState();
+	const [cards, setCards] = useState();
 	useEffect(() => {
 		socket.on('joined room', rooms => {
-			console.log('joined');
-			console.log(socket.id);
 			const room = rooms.filter(room => room.players.includes(socket.id))[0];
-			if (room.players.length === 2) setRoomReady(true);
+			if (room.players.length === 2) {
+				setRoomReady(true);
+				setRoomID(room.roomID);
+				setCards(room.cards);
+			}	else {
+				cardsForRoom(room.roomID);
+			}
 		});
 		socket.on('lets play', room => {
-			console.log('lets play');
-			console.log(room);
+			setRoomID(room.roomID);
 			setRoomReady(true);
+			setCards(room.cards);
 		});
-		socket.on('player left room', rooms => {
-			console.log('player left room');
-			console.log(rooms);
+		socket.on('player left room', () => {
 			setRoomReady(false);
+			setRoomID();
+			setCards();
 		});
 	},[]);
   return (
 	<div>
 		<GlobalStyles />
-		{roomReady
-			? <GamePage />
+		{roomReady && roomID
+			? <GamePage
+			roomID={roomID}
+			cards={cards}
+			/>
 			: <DashboardPage />
 		}
 	</div>

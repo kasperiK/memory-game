@@ -1,13 +1,12 @@
 import React,  {useState, useEffect } from 'react';
-import cardData from '../../cardData';
 import CardList from '../Game/CardList';
 import GameHeader from './GameHeader';
 import GameStatistics from './GameStatistics';
-import shuffleCards from '../../utils';
+import { socket } from '../../api';
 
 let gameTimer;
 
-const GamePage = () => {
+const GamePage = props => {
 	const [cards, setCards] = useState([]);
 	const [cardsOpened, setCardsOpened] = useState([]);
 	const [gameDuration, setGameDuration] = useState({seconds: 0, formattedDuration: ''});
@@ -98,8 +97,8 @@ const GamePage = () => {
 		allPairsFound && window.clearTimeout(gameTimer);
 	},[allPairsFound])
 	useEffect(() => {
-		setCards(shuffleCards(cardData));
-	},[])
+		if (props.cards) setCards(props.cards);
+	},[props])
 	return (
 		<div>
 			<GameHeader />
