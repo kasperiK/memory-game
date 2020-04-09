@@ -64,7 +64,7 @@ const GamePage = props => {
 			};
 		setIsPair();
 		}
-		return () => ({});
+		return () => {};
 	}, [cards, cardsOpened]);
 	useEffect(() => {
 		const setAreAllPairsFound = () => {
@@ -123,7 +123,7 @@ const GamePage = props => {
 		];
 		return cardsOpenedArr;
 		});
-		return () => ({});
+		return () => {};
 	}, [opponentCardOpen])
 	return (
 		<div>

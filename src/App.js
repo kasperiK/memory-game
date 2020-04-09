@@ -29,6 +29,7 @@ const App = () => {
 			setRoomReady(false);
 			setRoomID();
 			setCards();
+			setOpponentCardOpen({});
 		});
 		socket.on('opponent opened card', cardData => {
 			const cardToOpen = cardData;
