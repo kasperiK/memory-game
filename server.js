@@ -41,6 +41,10 @@ io.on('connection', socket => {
 		});
 	});
 
+	socket.on('card opened', (roomID, cardData) => {
+		socket.to(roomID).emit('opponent opened card', cardData);
+	});
+
 	// TODO for playing with friend
 	// socket.on('check for room', (id, roomcode) => {
 	// 	const isRoom = serverRooms.some(room => room === roomcode);

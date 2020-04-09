@@ -8,6 +8,7 @@ const App = () => {
 	const [roomReady, setRoomReady] = useState(false);
 	const [roomID, setRoomID] = useState();
 	const [cards, setCards] = useState();
+	const [opponentCardOpen, setOpponentCardOpen] = useState({});
 	useEffect(() => {
 		socket.on('joined room', rooms => {
 			const room = rooms.filter(room => room.players.includes(socket.id))[0];
@@ -29,6 +30,10 @@ const App = () => {
 			setRoomID();
 			setCards();
 		});
+		socket.on('opponent opened card', cardData => {
+			const cardToOpen = cardData;
+			setOpponentCardOpen(cardToOpen);
+		});
 	},[]);
   return (
 	<div>
@@ -37,6 +42,7 @@ const App = () => {
 			? <GamePage
 			roomID={roomID}
 			cards={cards}
+			opponentCardOpen={opponentCardOpen}
 			/>
 			: <DashboardPage />
 		}

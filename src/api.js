@@ -12,4 +12,8 @@ const cardsForRoom = roomID => {
 	socket.emit('cards for room', roomID, shuffleCards(cardData));
 };
 
-export { socket, joinRandomRoom, cardsForRoom };
+const openCard = (roomID, cardData) => {
+	socket.emit('card opened', roomID, cardData);
+};
+
+export { socket, joinRandomRoom, cardsForRoom, openCard};

@@ -2,7 +2,7 @@ import React,  {useState, useEffect } from 'react';
 import CardList from '../Game/CardList';
 import GameHeader from './GameHeader';
 import GameStatistics from './GameStatistics';
-import { socket } from '../../api';
+import { openCard } from '../../api';
 
 let gameTimer;
 
@@ -11,7 +11,8 @@ const GamePage = props => {
 	const [cardsOpened, setCardsOpened] = useState([]);
 	const [gameDuration, setGameDuration] = useState({seconds: 0, formattedDuration: ''});
 	const [allPairsFound, setAllPairsFound] = useState(false);
-	const setCardIsOpen = (id, pairID, isOpen) => {
+	const [opponentCardOpen, setOpponentCardOpen] = useState({});
+	const setCardIsOpen = ((id, pairID, isOpen) => {
 		if (cardsOpened.length === 2) {
 			return;
 		}	else {
@@ -29,7 +30,7 @@ const GamePage = props => {
 				}
 			]);
 		}
-	};
+	});
 	useEffect(() => {
 		if (cardsOpened.length === 2) {
 			const setIsPair = () => {
@@ -63,6 +64,7 @@ const GamePage = props => {
 			};
 		setIsPair();
 		}
+		return () => ({});
 	}, [cards, cardsOpened]);
 	useEffect(() => {
 		const setAreAllPairsFound = () => {
@@ -73,6 +75,7 @@ const GamePage = props => {
 			}
 		};
 		setAreAllPairsFound();
+		return () => ({});
 	}, [cards])
 	useEffect(() => {
 		const setGamePlayedDuration = () => {
@@ -98,13 +101,38 @@ const GamePage = props => {
 	},[allPairsFound])
 	useEffect(() => {
 		if (props.cards) setCards(props.cards);
+		setOpponentCardOpen(props.opponentCardOpen);
 	},[props])
+	useEffect(() => {
+		if (Object.keys(opponentCardOpen).length === 0 && opponentCardOpen.constructor === Object) return;
+		setCards(c => {
+			const cardsArr = [
+				...c.map((card) => {
+					if (card.id === opponentCardOpen.id) card.isOpen = !opponentCardOpen.isOpen;
+					return card;
+				})]
+			;
+			return cardsArr;
+		});
+		setCardsOpened(c => {
+			const cardsOpenedArr = [...c,
+			{
+				cardID: opponentCardOpen.id,
+				pairID: opponentCardOpen.pairID
+			}
+		];
+		return cardsOpenedArr;
+		});
+		return () => ({});
+	}, [opponentCardOpen])
 	return (
 		<div>
 			<GameHeader />
 			<CardList
 				cards={cards}
 				setCardIsOpen={setCardIsOpen}
+				openCard={openCard}
+				roomID={props.roomID}
 			/>
 			<GameStatistics
 				formattedGameDuration={gameDuration.formattedDuration}

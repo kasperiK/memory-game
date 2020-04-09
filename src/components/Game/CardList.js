@@ -14,6 +14,8 @@ const CardList = (props) => (
 					cardOpen={item.isOpen}
 					pairFound={item.pairFound}
 					setCardIsOpen={props.setCardIsOpen}
+					openCard={props.openCard}
+					roomID={props.roomID}
 				/>
 			))
 		}
