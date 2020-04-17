@@ -2,7 +2,7 @@ import cardData from '../src/cardData';
 import shuffleCards from '../src/utils';
 
 const io = require('socket.io-client');
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3000/');
 
 const joinRandomRoom = id => {
     socket.emit('join random room', id);
@@ -16,4 +16,8 @@ const openCard = (roomID, cardData) => {
 	socket.emit('card opened', roomID, cardData);
 };
 
-export { socket, joinRandomRoom, cardsForRoom, openCard};
+const leaveRoom = (roomID, id) => {
+	socket.emit('leave room', roomID, id);
+};
+
+export { socket, joinRandomRoom, cardsForRoom, openCard, leaveRoom};

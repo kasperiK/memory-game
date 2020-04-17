@@ -162,6 +162,89 @@ export const StyledStats = styled.div`
 	}
 `;
 
+export const StyledModal = styled.div`
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+`;
+
+export const StyledModalContent = styled.div`
+	position: relative;
+	width: 100%;
+	max-width: 600px;
+	margin: 0 1rem;
+	background: #303844;
+	color: #ffffff;
+	padding: 2rem;
+	padding-top: 50px;
+	text-align: center;
+	border-radius: .25rem;
+	box-shadow: 1px 0px 5px 0px rgba(48,56,68,.5);
+	& h3 {
+		margin: 0;
+		font-weight: normal;
+	}
+`;
+
+export const StyledModalClose = styled.div`
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: .5rem;
+	padding-top: 0;
+	font-size: 20px;
+	cursor: pointer;
+`;
+
+export const StyledLoader = styled.div`
+	color: #ffffff;
+	font-size: 8px;
+	margin: 0 auto;
+	margin-bottom: 35px;
+	position: relative;
+	text-indent: -9999em;
+	transform: translateZ(0);
+	animation-delay: -0.16s;
+	border-radius: 50%;
+	width: 2.5em;
+	height: 2.5em;
+	animation-fill-mode: both;
+	animation: loader 1.8s infinite ease-in-out;
+	:before, :after {
+		content: '';
+		position: absolute;
+		top: 0;
+		border-radius: 50%;
+		width: 2.5em;
+		height: 2.5em;
+		animation-fill-mode: both;
+		animation: loader 1.8s infinite ease-in-out;
+	}
+	:before {
+		left: -3.5em;
+  		animation-delay: -0.32s;
+	}
+	:after {
+		left: 3.5em;
+	}
+	@keyframes loader {
+		0%,
+		80%,
+		100% {
+			box-shadow: 0 2.5em 0 -1.3em;
+		}
+		40% {
+			box-shadow: 0 2.5em 0 0;
+		}
+	}
+`;
+
 
 
 

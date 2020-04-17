@@ -45,6 +45,12 @@ io.on('connection', socket => {
 		socket.to(roomID).emit('opponent opened card', cardData);
 	});
 
+	socket.on('leave room', (roomID, playerID) => {
+		serverRooms = serverRooms.filter(room => room.roomID !== roomID);
+		socket.leave(playerID);
+		socket.to(roomID).emit('player left room');
+	});
+
 	// TODO for playing with friend
 	// socket.on('check for room', (id, roomcode) => {
 	// 	const isRoom = serverRooms.some(room => room === roomcode);
@@ -64,7 +70,7 @@ io.on('connection', socket => {
 			socket.leave(player);
 		});
 		serverRooms = serverRooms.filter(room => room.roomID !== leftRoom.roomID);
-		socket.to(leftRoom.roomID).emit('player left room', serverRooms);
+		socket.to(leftRoom.roomID).emit('player left room');
 	});
 });
 

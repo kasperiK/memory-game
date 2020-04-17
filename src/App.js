@@ -9,21 +9,31 @@ const App = () => {
 	const [roomID, setRoomID] = useState();
 	const [cards, setCards] = useState();
 	const [opponentCardOpen, setOpponentCardOpen] = useState({});
+	const [gameInSearch, setGameInSearch] = useState(false);
+	const [playerID, setPlayerID] = useState();
+
+	const isGameInSearch = gameInSearchStatus => {
+		setGameInSearch(!gameInSearchStatus);
+	};
 	useEffect(() => {
 		socket.on('joined room', rooms => {
 			const room = rooms.filter(room => room.players.includes(socket.id))[0];
+			setRoomID(room.roomID);
 			if (room.players.length === 2) {
 				setRoomReady(true);
-				setRoomID(room.roomID);
 				setCards(room.cards);
+				setGameInSearch(false);
 			}	else {
 				cardsForRoom(room.roomID);
+				setGameInSearch(true);
+				setPlayerID(socket.id);
 			}
 		});
 		socket.on('lets play', room => {
 			setRoomID(room.roomID);
 			setRoomReady(true);
 			setCards(room.cards);
+			setGameInSearch(false);
 		});
 		socket.on('player left room', () => {
 			setRoomReady(false);
@@ -41,11 +51,16 @@ const App = () => {
 		<GlobalStyles />
 		{roomReady && roomID
 			? <GamePage
-			roomID={roomID}
-			cards={cards}
-			opponentCardOpen={opponentCardOpen}
+				roomID={roomID}
+				cards={cards}
+				opponentCardOpen={opponentCardOpen}
 			/>
-			: <DashboardPage />
+			: <DashboardPage
+				gameInSearch={gameInSearch}
+				isGameInSearch={isGameInSearch}
+				roomID={roomID}
+				playerID={playerID}
+			/>
 		}
 	</div>
   );
