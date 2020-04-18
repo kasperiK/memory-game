@@ -16,7 +16,8 @@ const DashboardPage = props => {
 				<StyledButton
 					onClick={findRandomGame}
 				>
-					Pelaa heti</StyledButton>
+					Pelaa heti
+				</StyledButton>
 				<StyledButton>Kutsu kaveri</StyledButton>
 			</div>
 		</StyledDashboard>

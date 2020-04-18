@@ -245,6 +245,6 @@ export const StyledLoader = styled.div`
 	}
 `;
 
-
-
-
+export const StyledModalBtnGroup = styled.div `
+	margin-top: 1.5rem;
+`;

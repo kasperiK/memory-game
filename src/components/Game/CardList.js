@@ -5,7 +5,7 @@ import { StyledCardList } from '../../StyledComponents';
 const CardList = (props) => (
 	<StyledCardList>
 		{
-			props.cards.map((item) => (
+			props.gameCards.map((item) => (
 				<Card
 					key={item.id}
 					id={item.id}
