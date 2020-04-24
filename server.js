@@ -51,6 +51,32 @@ io.on('connection', socket => {
 		socket.to(roomID).emit('player left room');
 	});
 
+	socket.on('change turn', roomID => {
+		const room = serverRooms.find(room => room && room.roomID === roomID);
+		socket.to(roomID).emit('turn changed', room);
+	});
+
+	socket.on('pair found', (roomID, playerID) => {
+		const room = serverRooms.find(room => room && room.roomID === roomID);
+		if (!room.points) {
+			room.points = [{'playerID': playerID, 'points': 1}];
+		}
+		else {
+			const playerHasPoints = room.points.find(player => player.playerID === playerID);
+			if (playerHasPoints) {
+				room.points.find(player => {
+					if (player.playerID === playerID) {
+						player.points = player.points + 1;
+					}
+					return player;
+				});
+			}	else {
+				room.points = [{'playerID': playerID, 'points': 1}];
+			}
+		}
+		socket.to(roomID).emit('opponent score changed', room.points[0].points);
+	});
+
 	// TODO for playing with friend
 	// socket.on('check for room', (id, roomcode) => {
 	// 	const isRoom = serverRooms.some(room => room === roomcode);

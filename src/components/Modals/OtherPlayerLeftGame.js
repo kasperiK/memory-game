@@ -17,6 +17,8 @@ const OtherPlayerLeftGame = props => {
 					props.clearGameDuration()
 					props.clearCardsOpened()
 					joinRandomRoom(socket.id)
+					props.setPoints(0)
+					props.setOpponentPoints(0)
 				}}
 				>
 					Etsi uusi peli
@@ -27,6 +29,8 @@ const OtherPlayerLeftGame = props => {
 					props.clearCards()
 					props.clearOpponentCardOpen()
 					props.clearPlayerLeftRoom()
+					props.setPoints(0)
+					props.setOpponentPoints(0)
 				}}
 				>
 					Aloitussivulle

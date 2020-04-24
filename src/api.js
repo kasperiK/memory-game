@@ -20,4 +20,12 @@ const leaveRoom = (roomID, id) => {
 	socket.emit('leave room', roomID, id);
 };
 
-export { socket, joinRandomRoom, cardsForRoom, openCard, leaveRoom};
+const changeTurn = roomID => {
+	socket.emit('change turn', roomID);
+};
+
+const pairFound = (roomID, id) => {
+	socket.emit('pair found', roomID, id);
+};
+
+export { socket, joinRandomRoom, cardsForRoom, openCard, leaveRoom, changeTurn, pairFound};

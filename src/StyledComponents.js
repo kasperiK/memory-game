@@ -245,6 +245,23 @@ export const StyledLoader = styled.div`
 	}
 `;
 
-export const StyledModalBtnGroup = styled.div `
+export const StyledModalBtnGroup = styled.div`
 	margin-top: 1.5rem;
+`;
+
+export const StyledPlayerTurns = styled.div`
+	text-align: center;
+    color: #fff;
+    margin-top: 3rem;
+`;
+
+export const StyledOverlay = styled.div`
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,.4);
+	cursor: not-allowed;
 `;

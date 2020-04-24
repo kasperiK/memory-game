@@ -4,7 +4,8 @@ import GameHeader from './GameHeader';
 import GameStatistics from './GameStatistics';
 import WaitingForOtherPlayer from '../Modals/WaitingForOtherPlayer';
 import OtherPlayerLeftGame from '../Modals/OtherPlayerLeftGame';
-import { openCard } from '../../api';
+import PlayerTurns from './PlayerTurns';
+import { openCard, changeTurn, pairFound } from '../../api';
 
 let gameTimer;
 
@@ -21,15 +22,20 @@ const GamePage = (
 		clearRoomID,
 		clearCards,
 		clearOpponentCardOpen,
-		clearPlayerLeftRoom
+		clearPlayerLeftRoom,
+		turn,
+		opponentScore
 	}
 ) => {
 	const [gameCards, setGameCards] = useState([]);
 	const [cardsOpened, setCardsOpened] = useState([]);
 	const [gameDuration, setGameDuration] = useState({seconds: 0, formattedDuration: ''});
+	const [points, setPoints] = useState(0);
+	const [opponentPoints, setOpponentPoints] = useState(0);
 	const [allPairsFound, setAllPairsFound] = useState(false);
 	const [isOpponentCardOpen, setIsOpponentCardOpen] = useState({});
 	const [isOpponentInGame, setIsOpponentInGame] = useState(true);
+	const [isOpponentsTurn, setIsOpponentsTurn] = useState(false);
 	const setCardIsOpen = ((id, pairID, isOpen) => {
 		if (cardsOpened.length === 2) {
 			return;
@@ -57,7 +63,10 @@ const GamePage = (
 	};
 	const clearCardsOpened = () => {
 		setCardsOpened([]);
-	}
+	};
+	const updatePoints = points => {
+		setPoints(points + 1);
+	};
 	useEffect(() => {
 		if (cardsOpened.length === 2) {
 			const setIsPair = () => {
@@ -70,6 +79,10 @@ const GamePage = (
 							return card;
 						})
 					]);
+					if (!isOpponentsTurn) {
+						updatePoints(points);
+						pairFound(roomID, turn)
+					}
 				}	else {
 					const cardItem = document.querySelectorAll('.Card');
 					[...cardItem].forEach((item) => {
@@ -85,6 +98,7 @@ const GamePage = (
 						[...cardItem].forEach((item) => {
 							item.classList.remove('disabled');
 						});
+						changeTurn(roomID);
 					}, 1000);
 				}
 				setCardsOpened([]);
@@ -92,7 +106,7 @@ const GamePage = (
 		setIsPair();
 		}
 		return () => {};
-	}, [gameCards, cardsOpened]);
+	}, [gameCards, cardsOpened, roomID, turn, isOpponentsTurn, points]);
 	useEffect(() => {
 		const setAreAllPairsFound = () => {
 			const allCards = gameCards;
@@ -135,7 +149,7 @@ const GamePage = (
 	},[opponentCardOpen])
 	useEffect(() => {
 		setIsOpponentInGame(!playerLeftRoom);
-	},[playerLeftRoom])
+	},[playerLeftRoom, isOpponentInGame])
 	useEffect(() => {
 		if (Object.keys(isOpponentCardOpen).length === 0 && isOpponentCardOpen.constructor === Object) return;
 		setGameCards(c => {
@@ -158,6 +172,19 @@ const GamePage = (
 		});
 		return () => {};
 	}, [isOpponentCardOpen])
+	useEffect(() => {
+		if (turn && turn !== playerID) {
+			setIsOpponentsTurn(true);
+		}	else if (turn && turn === playerID) {
+			setIsOpponentsTurn(false);
+		}
+	},[turn, playerID])
+	useEffect(() => {
+		setOpponentPoints(opponentScore);
+	}, [opponentScore])
+	useEffect(() => {
+		console.log(allPairsFound);
+	},[allPairsFound])
 	return (
 		<div>
 			<GameHeader />
@@ -169,7 +196,14 @@ const GamePage = (
 			/>
 			<GameStatistics
 				formattedGameDuration={gameDuration.formattedDuration}
+				points={points}
+				opponentPoints={opponentPoints}
 			/>
+			{isOpponentInGame &&
+				<PlayerTurns
+					isOpponentsTurn={isOpponentsTurn}
+				/>
+			}
 			{(!isOpponentInGame && !gameInSearch) &&
 				<OtherPlayerLeftGame
 					isGameInSearch={isGameInSearch}
@@ -182,6 +216,9 @@ const GamePage = (
 					clearTimer={clearTimer}
 					clearGameDuration={clearGameDuration}
 					clearCardsOpened={clearCardsOpened}
+					setIsOpponentsTurn={setIsOpponentsTurn}
+					setOpponentPoints={setOpponentPoints}
+					setPoints={setPoints}
 				/>
 			}
 			{ gameInSearch &&
